@@ -1,0 +1,19 @@
+:root {
+  --primary-color: #2D3436;
+  --secondary-color: #636E72;
+  --accent-color: #00B894;
+  --background-color: #F5F6FA;
+  --text-color: #2D3436;
+  --card-bg: #FFFFFF;
+  --gold-color: #C8A97E;
+  --dark-green: #1A472A;
+}
+
+[data-theme='dark'] {
+  --primary-color: #F5F6FA;
+  --secondary-color: #B2BEC3;
+  --accent-color: #00B894;
+  --background-color: #1E272E;
+  --text-color: #F5F6FA;
+  --card-bg: #2D3436;
+}

@@ -85,7 +85,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Theming | 0/2 | Not started | - |
+| 1. Foundation & Theming | 2/2 | Complete | 2026-05-04 |
 | 2. Customer Landing & Data | 0/2 | Not started | - |
 | 3. Cart & Real-time Ordering | 0/2 | Not started | - |
 | 4. Admin Dashboard & Auth | 0/2 | Not started | - |
