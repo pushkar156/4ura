@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AURA - Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #35432D;
+            --secondary-color: #2C4024;
+            --background-color: #FFFFFF;
+            --text-color: #35432D;
+            --gray-color: #666666;
+            --light-gray: #F5F5F5;
+            --border-radius: 12px;
+            --card-bg: #FFFFFF;
+            --border-color: rgba(53,67,45,0.1);
+            --shadow-color: rgba(53,67,45,0.1);
+            --item-hover: rgba(53, 67, 45, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #7AAE6E;
+            --secondary-color: #5A8B4E;
+            --background-color: #121212;
+            --text-color: #7AAE6E;
+            --gray-color: #A0A0A0;
+            --light-gray: #1E1E1E;
+            --card-bg: #1E1E1E;
+            --border-color: rgba(122,174,110,0.08);
+            --shadow-color: rgba(0,0,0,0.5);
+            --item-hover: rgba(122, 174, 110, 0.05);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            padding-top: 65px;
+            padding-bottom: 75px;
+            transition: all 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--item-hover);
+        }
+
+        /* Search Bar */
+        .search-section {
+            padding: 16px;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(53, 67, 45, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+
+        /* Category Filter Buttons */
+        .category-filters {
+            padding: 16px;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Menu Items Grid */
+        .menu-container {
+            padding: 12px;
+        }
+
+        .menu-items-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 90px;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .menu-item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .menu-item-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .menu-item-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .menu-item-badges {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            font-size: 9px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .badge-category {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .badge-type {
+            background: #e8f5e8;
+            color: #2d5016;
+        }
+
+        .badge-type.non-veg {
+            background: #ffe8e8;
+            color: #8b0000;
+        }
+
+        .menu-item-description {
+            font-size: 12px;
+            color: var(--gray-color);
+            margin-bottom: 6px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .menu-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .menu-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .menu-item-rating {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 11px;
+            color: var(--gray-color);
+        }
+
+        .rating-stars {
+            color: #ffd700;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-color);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray-color);
+            font-size: 12px;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            color: var(--primary-color);
+            background: var(--item-hover);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-item {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .menu-item:nth-child(1) { animation-delay: 0.05s; }
+        .menu-item:nth-child(2) { animation-delay: 0.1s; }
+        .menu-item:nth-child(3) { animation-delay: 0.15s; }
+        .menu-item:nth-child(4) { animation-delay: 0.2s; }
+        .menu-item:nth-child(5) { animation-delay: 0.25s; }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .menu-items-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .menu-items-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="home.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Menu
+        </a>
+        <h1 class="page-title">AURA Menu</h1>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search menu items..." id="searchInput">
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="category-filters">
+        <div class="filter-buttons" id="filterButtons">
+            <button class="filter-btn active" data-category="all">All Items</button>
+            <!-- Dynamic category buttons will be added here -->
+        </div>
+    </section>
+
+    <!-- Menu Items -->
+    <main class="menu-container">
+        <div class="menu-items-grid" id="menuItemsGrid">
+            <!-- Menu items will be dynamically loaded here -->
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">🔍</div>
+            <h3>No items found</h3>
+            <p>Try searching with different keywords or browse our categories</p>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            Home
+        </a>
+        <a href="menu.html" class="nav-item active">
+            <i class="fas fa-utensils"></i>
+            Menu
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script>
+        // Embed comprehensive menu data to avoid CORS issues
+        const menuItemsData = {
+            // Soups
+            'Hot and Sour Soup': {
+                name: 'Hot and Sour Soup',
+                price: '₹150/175',
+                description: 'Spicy, soy & ginger flavored thick Chinese broth served with shredded vegetables or chicken',
+                image: 'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?w=500',
+                rating: 4.5,
+                reviews: 50,
+                category: 'Soups',
+                type: 'Veg/Non Veg'
+            },
+            'Clear Soup': {
+                name: 'Clear Soup',
+                price: '₹150/175/200',
+                description: 'Vegetable/chicken/seafood broth served garnished with spring onions',
+                image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=500',
+                rating: 4.3,
+                reviews: 45,
+                category: 'Soups',
+                type: 'Veg/Non Veg/Seafood'
+            },
+            'Manchow Soup': {
+                name: 'Manchow Soup',
+                price: '₹150/175',
+                description: 'Spicy, thick Chinese broth made with dices of vegetables or chicken',
+                image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=500',
+                rating: 4.6,
+                reviews: 60,
+                category: 'Soups',
+                type: 'Veg/Non Veg'
+            },
+            'Thai Chicken/Coconut Soup': {
+                name: 'Thai Chicken/Coconut Soup',
+                price: '₹195',
+                description: 'A spicy Thai chicken soup made with fresh coconut cream',
+                image: 'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?w=500',
+                rating: 4.7,
+                reviews: 55,
+                category: 'Soups',
+                type: 'Non Veg'
+            },
+            'Hot and Sour Wanton': {
+                name: 'Hot and Sour Wanton',
+                price: '₹190',
+                description: 'Minced Chicken Wrapped In Wanton Dumplings, Pepper Flavor Chinese Broth With Chinese Cabbage And Spring Onions, Served With Crispy Noodles',
+                image: 'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?w=500',
+                rating: 4.8,
+                reviews: 48,
+                category: 'Soups',
+                type: 'Non Veg'
+            },
+            'Spicy Fish Ball Soup': {
+                name: 'Spicy Fish Ball Soup',
+                price: '₹175',
+                description: 'Spicy Fish Dumplings In A Clear Soup',
+                image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=500',
+                rating: 4.5,
+                reviews: 42,
+                category: 'Soups',
+                type: 'Non Veg'
+            },
+            'Brocolli and Almond Soup': {
+                name: 'Brocolli and Almond Soup',
+                price: '₹160',
+                description: 'A healthy and creamy blend of fresh broccoli and toasted almonds',
+                image: 'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?w=500',
+                rating: 4.4,
+                reviews: 38,
+                category: 'Soups',
+                type: 'Veg'
+            },
+            
+            // Papad & Khakra
+            'Masala Papad (Roasted/Fried)': {
+                name: 'Masala Papad (Roasted/Fried)',
+                price: '₹40/50',
+                description: 'Crispy papad topped with onions, tomatoes, and chaat masala',
+                image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=500',
+                rating: 4.2,
+                reviews: 35,
+                category: 'Papad & Khakra',
+                type: 'Veg'
+            },
+            'Nagli Papad (Roasted/Fried/Masala)': {
+                name: 'Nagli Papad (Roasted/Fried/Masala)',
+                price: '₹40/50/80',
+                description: 'Healthy and crispy papad made from ragi (finger millet)',
+                image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=500',
+                rating: 4.1,
+                reviews: 28,
+                category: 'Papad & Khakra',
+                type: 'Veg'
+            },
+            'Sindhi Papad': {
+                name: 'Sindhi Papad',
+                price: '₹90',
+                description: 'A crispy, spiced lentil cracker, perfect as a snack or side dish',
+                image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=500',
+                rating: 4.3,
+                reviews: 32,
+                category: 'Papad & Khakra',
+                type: 'Veg'
+            },
+            'Rumali Khakra (Plain/Cheese/Masala)': {
+                name: 'Rumali Khakra (Plain/Cheese/Masala)',
+                price: '₹190/240/280',
+                description: 'Ultra-thin, large-sized crispy with a delicate crunch',
+                image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=500',
+                rating: 4.4,
+                reviews: 40,
+                category: 'Papad & Khakra',
+                type: 'Veg'
+            },
+            
+            // Salads
+            'Garden Fresh Salad': {
+                name: 'Garden Fresh Salad',
+                price: '₹180',
+                description: 'Fresh mix of seasonal vegetables, lettuce, cherry tomatoes, and house dressing.',
+                image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500',
+                rating: 4.2,
+                reviews: 45,
+                category: 'Salads',
+                type: 'Veg'
+            },
+            'Caesar Salad': {
+                name: 'Caesar Salad',
+                price: '₹240',
+                description: 'Crisp romaine lettuce, parmesan cheese, croutons, and Caesar dressing',
+                image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500',
+                rating: 4.3,
+                reviews: 52,
+                category: 'Salads',
+                type: 'Veg'
+            },
+            'Chicken Caesar Salad': {
+                name: 'Chicken Caesar Salad',
+                price: '₹220',
+                description: 'Caesar salad topped with grilled chicken breast strips.',
+                image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500',
+                rating: 4.5,
+                reviews: 48,
+                category: 'Salads',
+                type: 'Non-Veg'
+            },
+            
+            // Starters/Appetizers
+            'Paneer Tikka': {
+                name: 'Paneer Tikka',
+                price: '₹220',
+                description: 'Cubes of paneer marinated in yogurt and spices, grilled to perfection.',
+                image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500',
+                rating: 4.4,
+                reviews: 85,
+                category: 'Starters',
+                type: 'Veg'
+            },
+            'Chicken Tikka': {
+                name: 'Chicken Tikka',
+                price: '₹240',
+                description: 'Tender chicken pieces marinated in yogurt and spices, grilled to perfection.',
+                image: 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=500',
+                rating: 4.6,
+                reviews: 92,
+                category: 'Starters',
+                type: 'Non-Veg'
+            },
+            
+            // Main Course
+            'Mutton Rogan Josh': {
+                name: 'Mutton Rogan Josh',
+                price: '₹320',
+                description: 'Tender mutton pieces cooked in a rich, aromatic gravy with Kashmiri spices.',
+                image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500',
+                rating: 4.7,
+                reviews: 78,
+                category: 'Main Course',
+                type: 'Non-Veg'
+            },
+            'Mutton Korma': {
+                name: 'Mutton Korma',
+                price: '₹310',
+                description: 'Mutton cooked in a creamy, nutty gravy with aromatic spices.',
+                image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500',
+                rating: 4.5,
+                reviews: 65,
+                category: 'Main Course',
+                type: 'Non-Veg'
+            },
+            'Butter Chicken': {
+                name: 'Butter Chicken',
+                price: '₹280',
+                description: 'Tender chicken in rich, creamy tomato-based curry',
+                image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500',
+                rating: 4.8,
+                reviews: 150,
+                category: 'Main Course',
+                type: 'Non Veg'
+            },
+            'Paneer Butter Masala': {
+                name: 'Paneer Butter Masala',
+                price: '₹250',
+                description: 'Cottage cheese in rich, creamy tomato gravy',
+                image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500',
+                rating: 4.5,
+                reviews: 120,
+                category: 'Main Course',
+                type: 'Veg'
+            },
+            
+            // Biryani
+            'Mutton Biryani': {
+                name: 'Mutton Biryani',
+                price: '₹340',
+                description: 'Fragrant basmati rice cooked with tender mutton pieces and aromatic spices.',
+                image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500',
+                rating: 4.8,
+                reviews: 95,
+                category: 'Biryani',
+                type: 'Non-Veg'
+            },
+            'Chicken Biryani': {
+                name: 'Chicken Biryani',
+                price: '₹280',
+                description: 'Fragrant basmati rice cooked with tender chicken and aromatic spices',
+                image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500',
+                rating: 4.7,
+                reviews: 180,
+                category: 'Biryani',
+                type: 'Non Veg'
+            },
+            'Veg Biryani': {
+                name: 'Veg Biryani',
+                price: '₹220',
+                description: 'Aromatic basmati rice with mixed vegetables and spices',
+                image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500',
+                rating: 4.4,
+                reviews: 110,
+                category: 'Biryani',
+                type: 'Veg'
+            },
+            
+            // Seafood
+            'Fish Curry': {
+                name: 'Fish Curry',
+                price: '₹280',
+                description: 'Fresh fish cooked in a tangy and spicy coconut-based curry.',
+                image: 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=500',
+                rating: 4.6,
+                reviews: 72,
+                category: 'Seafood',
+                type: 'Non-Veg'
+            },
+            'Prawn Curry': {
+                name: 'Prawn Curry',
+                price: '₹290',
+                description: 'Juicy prawns cooked in rich and spicy curry.',
+                image: 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=500',
+                rating: 4.7,
+                reviews: 68,
+                category: 'Seafood',
+                type: 'Non-Veg'
+            },
+            
+            // Noodles
+            'Veg Hakka Noodles': {
+                name: 'Veg Hakka Noodles',
+                price: '₹180',
+                description: 'Stir-fried noodles with fresh vegetables and soy sauce.',
+                image: 'https://images.unsplash.com/photo-1552611052-33e04de081de?w=500',
+                rating: 4.3,
+                reviews: 85,
+                category: 'Noodles',
+                type: 'Veg'
+            },
+            'Chicken Noodles': {
+                name: 'Chicken Noodles',
+                price: '₹200',
+                description: 'Stir-fried noodles with chicken and vegetables in soy sauce.',
+                image: 'https://images.unsplash.com/photo-1552611052-33e04de081de?w=500',
+                rating: 4.5,
+                reviews: 92,
+                category: 'Noodles',
+                type: 'Non-Veg'
+            },
+            
+            // Pizza
+            'Margherita Pizza': {
+                name: 'Margherita Pizza',
+                price: '₹250',
+                description: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
+                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500',
+                rating: 4.5,
+                reviews: 120,
+                category: 'Pizza',
+                type: 'Veg'
+            },
+            'Chicken Pizza': {
+                name: 'Chicken Pizza',
+                price: '₹320',
+                description: 'Delicious pizza topped with chicken, cheese, and vegetables',
+                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500',
+                rating: 4.6,
+                reviews: 105,
+                category: 'Pizza',
+                type: 'Non Veg'
+            },
+            
+            // Pasta
+            'Pasta Alfredo': {
+                name: 'Pasta Alfredo',
+                price: '₹220',
+                description: 'Creamy pasta with white sauce and herbs',
+                image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500',
+                rating: 4.2,
+                reviews: 75,
+                category: 'Pasta',
+                type: 'Veg'
+            },
+            'Chicken Pasta': {
+                name: 'Chicken Pasta',
+                price: '₹280',
+                description: 'Delicious pasta with grilled chicken and creamy sauce',
+                image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500',
+                rating: 4.4,
+                reviews: 82,
+                category: 'Pasta',
+                type: 'Non Veg'
+            },
+            
+            // Desserts
+            'Chocolate Brownie': {
+                name: 'Chocolate Brownie',
+                price: '₹120',
+                description: 'Rich, fudgy chocolate brownie served warm',
+                image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500',
+                rating: 4.6,
+                reviews: 65,
+                category: 'Desserts',
+                type: 'Veg'
+            },
+            'Ice Cream Sundae': {
+                name: 'Ice Cream Sundae',
+                price: '₹150',
+                description: 'Vanilla ice cream with chocolate sauce and nuts',
+                image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500',
+                rating: 4.4,
+                reviews: 58,
+                category: 'Desserts',
+                type: 'Veg'
+            },
+            
+            // Beverages
+            'Mango Milkshake': {
+                name: 'Mango Milkshake',
+                price: '₹80',
+                description: 'Creamy mango milkshake made with fresh mangoes',
+                image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500',
+                rating: 4.3,
+                reviews: 45,
+                category: 'Beverages',
+                type: 'Veg'
+            },
+            'Fresh Lime Soda': {
+                name: 'Fresh Lime Soda',
+                price: '₹60',
+                description: 'Refreshing lime soda with mint',
+                image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500',
+                rating: 4.1,
+                reviews: 38,
+                category: 'Beverages',
+                type: 'Veg'
+            }
+        };
+        
+        // Debug: Check if menu data is loaded
+        console.log('menuItemsData loaded:', typeof menuItemsData !== 'undefined');
+        console.log('Total items:', Object.keys(menuItemsData).length);
+    </script>
+    <script>
+        class MenuApp {
+            constructor() {
+                this.currentCategory = 'all';
+                this.searchQuery = '';
+                this.menuData = this.organizeMenuData();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.createCategoryFilters();
+                this.displayMenuItems();
+                this.setupThemeToggle();
+            }
+
+            organizeMenuData() {
+                // Check if menuItemsData exists, if not use fallback data
+                if (typeof menuItemsData === 'undefined' || !menuItemsData || Object.keys(menuItemsData).length === 0) {
+                    console.warn('menuItemsData not found or empty, using fallback data');
+                    return this.getFallbackData();
+                }
+                
+                console.log('Using menuItemsData with', Object.keys(menuItemsData).length, 'items');
+
+                const organized = {
+                    all: [],
+                    soups: [],
+                    appetizers: [],
+                    salads: [],
+                    maincourse: [],
+                    seafood: [],
+                    biryani: [],
+                    noodles: [],
+                    pizza: [],
+                    pasta: [],
+                    desserts: [],
+                    beverages: [],
+                    papad: [],
+                    raita: []
+                };
+
+                // Convert menuItemsData object to array and organize by categories
+                Object.values(menuItemsData).forEach(item => {
+                    organized.all.push(item);
+                    
+                    const category = item.category.toLowerCase();
+                    
+                    if (category.includes('soup')) {
+                        organized.soups.push(item);
+                    } else if (category.includes('appetizer') || category.includes('tikka') || category.includes('kebab')) {
+                        organized.appetizers.push(item);
+                    } else if (category.includes('salad')) {
+                        organized.salads.push(item);
+                    } else if (category.includes('seafood') || category.includes('fish') || category.includes('prawn')) {
+                        organized.seafood.push(item);
+                    } else if (category.includes('biryani')) {
+                        organized.biryani.push(item);
+                    } else if (category.includes('noodles')) {
+                        organized.noodles.push(item);
+                    } else if (category.includes('pizza')) {
+                        organized.pizza.push(item);
+                    } else if (category.includes('pasta')) {
+                        organized.pasta.push(item);
+                    } else if (category.includes('dessert') || category.includes('ice cream') || category.includes('brownie')) {
+                        organized.desserts.push(item);
+                    } else if (category.includes('beverage') || category.includes('drink') || category.includes('coffee') || category.includes('tea') || category.includes('milkshake')) {
+                        organized.beverages.push(item);
+                    } else if (category.includes('papad') || category.includes('khakra')) {
+                        organized.papad.push(item);
+                    } else if (category.includes('raita')) {
+                        organized.raita.push(item);
+                    } else {
+                        organized.maincourse.push(item);
+                    }
+                });
+
+                return organized;
+            }
+
+            getFallbackData() {
+                // Fallback data from previous menu
+                const allItems = [
+                    {
+                        name: "Chicken Tikka",
+                        price: "₹350",
+                        description: "Tender chicken pieces marinated in yogurt and spices, grilled to perfection",
+                        category: "Starters",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1541014741259-de529411b96a?w=500",
+                        rating: 4.5,
+                        reviews: 120
+                    },
+                    {
+                        name: "Paneer Tikka",
+                        price: "₹280",
+                        description: "Cottage cheese cubes marinated in spices and grilled",
+                        category: "Starters",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500",
+                        rating: 4.3,
+                        reviews: 95
+                    },
+                    {
+                        name: "Caesar Salad",
+                        price: "₹240",
+                        description: "Crisp romaine lettuce, parmesan cheese, croutons, and Caesar dressing",
+                        category: "Salads",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500",
+                        rating: 4.2,
+                        reviews: 80
+                    },
+                    {
+                        name: "Greek Salad",
+                        price: "₹220",
+                        description: "Fresh cucumber, tomatoes, olives, feta cheese, and oregano dressing",
+                        category: "Salads",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500",
+                        rating: 4.1,
+                        reviews: 65
+                    },
+                    {
+                        name: "Chicken Biryani",
+                        price: "₹420",
+                        description: "Fragrant basmati rice cooked with tender chicken and aromatic spices",
+                        category: "Biryani",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500",
+                        rating: 4.7,
+                        reviews: 200
+                    },
+                    {
+                        name: "Veg Biryani",
+                        price: "₹320",
+                        description: "Aromatic basmati rice with mixed vegetables and spices",
+                        category: "Biryani",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500",
+                        rating: 4.4,
+                        reviews: 150
+                    },
+                    {
+                        name: "Hakka Noodles",
+                        price: "₹280",
+                        description: "Classic Indo-Chinese noodles with vegetables",
+                        category: "Noodles",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=500",
+                        rating: 4.1,
+                        reviews: 110
+                    },
+                    {
+                        name: "Chicken Noodles",
+                        price: "₹330",
+                        description: "Stir-fried noodles with chicken and vegetables",
+                        category: "Noodles",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=500",
+                        rating: 4.3,
+                        reviews: 130
+                    },
+                    {
+                        name: "Margherita Pizza",
+                        price: "₹380",
+                        description: "Classic pizza with tomato sauce, mozzarella, and fresh basil",
+                        category: "Pizza",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+                        rating: 4.5,
+                        reviews: 180
+                    },
+                    {
+                        name: "Chicken Pizza",
+                        price: "₹450",
+                        description: "Delicious pizza topped with chicken, cheese, and vegetables",
+                        category: "Pizza",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+                        rating: 4.6,
+                        reviews: 160
+                    },
+                    {
+                        name: "Pasta Alfredo",
+                        price: "₹320",
+                        description: "Creamy pasta with white sauce and herbs",
+                        category: "Pasta",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500",
+                        rating: 4.2,
+                        reviews: 90
+                    },
+                    {
+                        name: "Chicken Pasta",
+                        price: "₹380",
+                        description: "Delicious pasta with grilled chicken and creamy sauce",
+                        category: "Pasta",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500",
+                        rating: 4.4,
+                        reviews: 105
+                    },
+                    {
+                        name: "Fish Curry",
+                        price: "₹480",
+                        description: "Fresh fish cooked in aromatic curry sauce",
+                        category: "Seafood",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=500",
+                        rating: 4.8,
+                        reviews: 140
+                    },
+                    {
+                        name: "Prawn Masala",
+                        price: "₹520",
+                        description: "Juicy prawns cooked in rich, spicy masala gravy",
+                        category: "Seafood",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=500",
+                        rating: 4.7,
+                        reviews: 120
+                    },
+                    {
+                        name: "Butter Chicken",
+                        price: "₹420",
+                        description: "Tender chicken in rich, creamy tomato-based curry",
+                        category: "Main Course",
+                        type: "Non-Veg",
+                        image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500",
+                        rating: 4.8,
+                        reviews: 250
+                    },
+                    {
+                        name: "Paneer Butter Masala",
+                        price: "₹340",
+                        description: "Cottage cheese in rich, creamy tomato gravy",
+                        category: "Main Course",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500",
+                        rating: 4.5,
+                        reviews: 180
+                    },
+                    {
+                        name: "Chocolate Brownie",
+                        price: "₹180",
+                        description: "Rich, fudgy chocolate brownie served warm",
+                        category: "Desserts",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500",
+                        rating: 4.6,
+                        reviews: 95
+                    },
+                    {
+                        name: "Mango Milkshake",
+                        price: "₹120",
+                        description: "Creamy mango milkshake made with fresh mangoes",
+                        category: "Beverages",
+                        type: "Veg",
+                        image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500",
+                        rating: 4.3,
+                        reviews: 75
+                    }
+                ];
+
+                // Organize items by category
+                const organized = {
+                    all: allItems,
+                    appetizers: allItems.filter(item => item.category === 'Starters'),
+                    salads: allItems.filter(item => item.category === 'Salads'),
+                    maincourse: allItems.filter(item => item.category === 'Main Course'),
+                    seafood: allItems.filter(item => item.category === 'Seafood'),
+                    biryani: allItems.filter(item => item.category === 'Biryani'),
+                    noodles: allItems.filter(item => item.category === 'Noodles'),
+                    pizza: allItems.filter(item => item.category === 'Pizza'),
+                    pasta: allItems.filter(item => item.category === 'Pasta'),
+                    desserts: allItems.filter(item => item.category === 'Desserts'),
+                    beverages: allItems.filter(item => item.category === 'Beverages'),
+                    papad: [],
+                    raita: [],
+                    soups: []
+                };
+
+                return organized;
+            }
+
+            createCategoryFilters() {
+                const filterButtons = document.getElementById('filterButtons');
+                const categories = [
+                    { key: 'all', name: 'All Items', icon: 'fas fa-th-large' },
+                    { key: 'soups', name: 'Soups', icon: 'fas fa-bowl-food' },
+                    { key: 'appetizers', name: 'Appetizers', icon: 'fas fa-drumstick-bite' },
+                    { key: 'salads', name: 'Salads', icon: 'fas fa-leaf' },
+                    { key: 'maincourse', name: 'Main Course', icon: 'fas fa-utensils' },
+                    { key: 'seafood', name: 'Seafood', icon: 'fas fa-fish' },
+                    { key: 'biryani', name: 'Biryani', icon: 'fas fa-bowl-rice' },
+                    { key: 'noodles', name: 'Noodles', icon: 'fas fa-wheat-awn' },
+                    { key: 'pizza', name: 'Pizza', icon: 'fas fa-pizza-slice' },
+                    { key: 'pasta', name: 'Pasta', icon: 'fas fa-wheat-awn' },
+                    { key: 'desserts', name: 'Desserts', icon: 'fas fa-ice-cream' },
+                    { key: 'beverages', name: 'Beverages', icon: 'fas fa-mug-saucer' },
+                    { key: 'papad', name: 'Papad', icon: 'fas fa-cookie' },
+                    { key: 'raita', name: 'Raita', icon: 'fas fa-bowl-food' }
+                ];
+
+                // Only show categories that have items
+                categories.forEach(category => {
+                    if (category.key === 'all' || (this.menuData[category.key] && this.menuData[category.key].length > 0)) {
+                        const count = category.key === 'all' ? this.menuData.all.length : this.menuData[category.key].length;
+                        const button = document.createElement('button');
+                        button.className = `filter-btn ${category.key === 'all' ? 'active' : ''}`;
+                        button.dataset.category = category.key;
+                        button.innerHTML = `${category.name} (${count})`;
+                        filterButtons.appendChild(button);
+                    }
+                });
+            }
+
+            setupEventListeners() {
+                // Search functionality
+                const searchInput = document.getElementById('searchInput');
+                searchInput.addEventListener('input', (e) => {
+                    this.searchQuery = e.target.value.toLowerCase().trim();
+                    this.displayMenuItems();
+                });
+
+                // Category filter buttons
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('filter-btn')) {
+                        // Update active button
+                        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        
+                        // Update current category and display items
+                        this.currentCategory = e.target.dataset.category;
+                        this.displayMenuItems();
+                        
+                        // Clear search when switching categories
+                        if (this.searchQuery) {
+                            searchInput.value = '';
+                            this.searchQuery = '';
+                        }
+                    }
+                });
+            }
+
+            displayMenuItems() {
+                console.log('displayMenuItems called');
+                const grid = document.getElementById('menuItemsGrid');
+                const emptyState = document.getElementById('emptyState');
+                
+                if (!grid) {
+                    console.error('menuItemsGrid element not found');
+                    return;
+                }
+                
+                let items = [];
+                
+                if (this.searchQuery) {
+                    // Search across all items
+                    items = this.menuData.all.filter(item => 
+                        item.name.toLowerCase().includes(this.searchQuery) ||
+                        item.description.toLowerCase().includes(this.searchQuery) ||
+                        item.category.toLowerCase().includes(this.searchQuery) ||
+                        (item.type && item.type.toLowerCase().includes(this.searchQuery))
+                    );
+                } else {
+                    // Show items from selected category
+                    items = this.menuData[this.currentCategory] || [];
+                }
+
+                console.log('Displaying', items.length, 'items for category:', this.currentCategory);
+
+                if (items.length === 0) {
+                    grid.style.display = 'none';
+                    if (emptyState) emptyState.style.display = 'block';
+                    console.log('No items to display');
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                if (emptyState) emptyState.style.display = 'none';
+                
+                grid.innerHTML = items.map(item => this.createMenuItemHTML(item)).join('');
+                console.log('Menu items rendered successfully');
+            }
+
+            createMenuItemHTML(item) {
+                const imageUrl = item.image || `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=300&fit=crop`;
+                
+                const ratingHTML = item.rating ? `
+                    <div class="menu-item-rating">
+                        <span class="rating-stars">${'★'.repeat(Math.floor(item.rating))}</span>
+                        <span>${item.rating} (${item.reviews || 0})</span>
+                    </div>
+                ` : '';
+
+                const typeClass = item.type && item.type.toLowerCase().includes('non') ? 'non-veg' : '';
+                
+                return `
+                    <div class="menu-item" data-item="${item.name}">
+                        <img src="${imageUrl}" alt="${item.name}" class="menu-item-image" 
+                             onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                        <div class="menu-item-content">
+                            <div class="menu-item-header">
+                                <h3 class="menu-item-name">${item.name}</h3>
+                                <div class="menu-item-badges">
+                                    <span class="badge badge-category">${item.category}</span>
+                                    ${item.type ? `<span class="badge badge-type ${typeClass}">${item.type}</span>` : ''}
+                                </div>
+                            </div>
+                            <p class="menu-item-description">${item.description}</p>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">${item.price}</span>
+                                ${ratingHTML}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            setupThemeToggle() {
+                const themeToggle = document.getElementById('themeToggle');
+                const html = document.documentElement;
+                
+                // Check system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.setAttribute('data-theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = html.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    html.setAttribute('data-theme', newTheme);
+                    themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                    
+                    // Save preference
+                    localStorage.setItem('theme', newTheme);
+                });
+
+                // Load saved preference
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    html.setAttribute('data-theme', savedTheme);
+                    themeToggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                }
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing MenuApp');
+            try {
+                const app = new MenuApp();
+                console.log('MenuApp initialized successfully');
+                
+                // Force display after a short delay to ensure everything is loaded
+                setTimeout(() => {
+                    console.log('Force refreshing menu display');
+                    app.displayMenuItems();
+                }, 100);
+            } catch (error) {
+                console.error('Error initializing MenuApp:', error);
+                
+                // Fallback: Show a simple message
+                const grid = document.getElementById('menuItemsGrid');
+                if (grid) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                            <h3>Loading Menu...</h3>
+                            <p>If this persists, please refresh the page.</p>
+                        </div>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

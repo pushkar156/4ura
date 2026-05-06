@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AURA - Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #35432D;
+            --secondary-color: #2C4024;
+            --background-color: #FFFFFF;
+            --text-color: #35432D;
+            --gray-color: #666666;
+            --light-gray: #F5F5F5;
+            --border-radius: 12px;
+            --card-bg: #FFFFFF;
+            --border-color: rgba(53,67,45,0.1);
+            --shadow-color: rgba(53,67,45,0.1);
+            --item-hover: rgba(53, 67, 45, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #7AAE6E;
+            --secondary-color: #5A8B4E;
+            --background-color: #121212;
+            --text-color: #7AAE6E;
+            --gray-color: #A0A0A0;
+            --light-gray: #1E1E1E;
+            --card-bg: #1E1E1E;
+            --border-color: rgba(122,174,110,0.08);
+            --shadow-color: rgba(0,0,0,0.5);
+            --item-hover: rgba(122, 174, 110, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            padding-top: 60px;
+            padding-bottom: 80px;
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .back-button {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .page-title {
+            margin-left: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .menu-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .menu-card:active {
+            transform: scale(0.98);
+        }
+
+        .menu-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+        }
+
+        .menu-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .menu-card:hover .menu-image {
+            transform: scale(1.05);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            z-index: 1004;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 10px var(--shadow-color);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray-color);
+            font-size: 12px;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-color);
+            opacity: 0;
+            border-radius: 12px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+            transform: translateY(-4px);
+        }
+
+        .nav-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            transform: translateY(-4px);
+        }
+
+        .nav-item.active::before {
+            opacity: 0.1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: navPulse 2s infinite;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-item span {
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+            transition: font-weight 0.3s ease;
+        }
+
+        .nav-item:hover span,
+        .nav-item.active span {
+            font-weight: 600;
+        }
+
+        @keyframes navPulse {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.5);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        [data-theme="dark"] .bottom-nav {
+            background: rgba(30, 30, 30, 0.9);
+            border-top-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] .nav-item::before {
+            background: var(--primary-color);
+        }
+
+        [data-theme="dark"] .nav-item:hover,
+        [data-theme="dark"] .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        [data-theme="dark"] .nav-item.active::after {
+            background: var(--primary-color);
+            box-shadow: 0 0 8px rgba(143, 190, 130, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-card {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .menu-card:nth-child(1) { animation-delay: 0.1s; }
+        .menu-card:nth-child(2) { animation-delay: 0.2s; }
+        .menu-card:nth-child(3) { animation-delay: 0.3s; }
+        .menu-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(100%);
+            background: var(--background-color);
+            width: 100%;
+            height: 100vh;
+            border-radius: 0;
+            padding: 0;
+            z-index: 2001;
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            margin: 0;
+            background: var(--background-color);
+            border-bottom: none;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .close-modal svg {
+            width: 24px;
+            height: 24px;
+            color: #333;
+        }
+
+        .modal-grid {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
+        }
+
+        .subcategory-section {
+            margin: 8px 16px;
+        }
+
+        .subcategory-header {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .subcategory-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            margin: 0;
+            cursor: pointer;
+            background: var(--primary-color);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .subcategory-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .subcategory-title:hover::before {
+            opacity: 1;
+        }
+
+        .subcategory-title-text {
+            position: relative;
+            transform-origin: left center;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .subcategory-header.active .subcategory-title {
+            background: transparent;
+            color: var(--text-color);
+            padding: 16px 0;
+        }
+
+        .subcategory-header.active .subcategory-title-text {
+            transform: translateX(0);
+        }
+
+        .subcategory-title svg {
+            width: 20px;
+            height: 20px;
+            color: currentColor;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        .subcategory-header.active .subcategory-title svg {
+            transform: rotate(180deg);
+        }
+
+        .subcategory-line {
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left;
+            will-change: width, transform;
+        }
+
+        .subcategory-header.active .subcategory-line {
+            width: 100%;
+        }
+
+        .menu-items-list {
+            display: none;
+            flex-direction: column;
+            padding: 0 16px;
+        }
+
+        .menu-items-list.show {
+            display: flex;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .menu-item:hover {
+            transform: translateX(8px);
+            background: var(--item-hover);
+        }
+
+        .menu-item-name {
+            font-size: 15px;
+            color: var(--text-color);
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .menu-item-arrow {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-left: 16px;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item:hover .menu-item-arrow {
+            transform: translateX(4px);
+        }
+
+        .food-card {
+            animation: fadeIn 0.3s ease-out forwards;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .food-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .food-info {
+            padding: 12px;
+        }
+
+        .food-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .food-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .food-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .food-description {
+            color: var(--gray-color);
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .rating-container {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 16px;
+        }
+
+        .star-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #FFD700;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .view-details {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            width: 100%;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-details:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .modal,
+        [data-theme="dark"] .modal-header {
+            background: var(--background-color);
+        }
+
+        [data-theme="dark"] .subcategory-title::before {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        [data-theme="dark"] .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Item Details Modal Styles */
+        .item-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            z-index: 2000;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .item-details-modal.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .item-details-modal .item-content {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .item-details-modal .modal-header {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .item-details-modal .back-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .item-details-modal .item-content {
+            padding: 16px;
+        }
+
+        /* Modal backdrop animation */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1999;
+            display: none;
+        }
+
+        .modal-backdrop.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Add animation for similar items */
+        .item-details-modal .similar-item {
+            animation: modalFadeIn 0.3s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .item-details-modal .similar-item:nth-child(1) { animation-delay: 0.1s; }
+        .item-details-modal .similar-item:nth-child(2) { animation-delay: 0.2s; }
+        .item-details-modal .similar-item:nth-child(3) { animation-delay: 0.3s; }
+        .item-details-modal .similar-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .item-details-modal .item-image-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .item-details-modal .main-item-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .item-details-modal .item-header {
+            margin-bottom: 16px;
+        }
+
+        .item-details-modal .item-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .item-details-modal .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-details-modal .item-price {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .item-details-modal .item-type {
+            font-size: 14px;
+            color: var(--gray-color);
+        }
+
+        .item-details-modal .item-description {
+            color: var(--gray-color);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .item-details-modal .similar-food-section {
+            margin-bottom: 24px;
+        }
+
+        .item-details-modal .similar-food-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .item-details-modal .similar-items-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .item-details-modal .similar-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-details-modal .similar-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .item-details-modal .similar-item-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .item-details-modal .similar-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .item-details-modal .similar-item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex: 1;
+        }
+
+        .item-details-modal .similar-item-price {
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .item-details-modal .similar-item-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--gray-color);
+        }
+
+        .item-details-modal .similar-item-view-details {
+            width: 100%;
+            padding: 8px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: auto;
+        }
+
+        .search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--background-color);
+            padding: 10px 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 30px;
+            color: var(--gray-color);
+            pointer-events: none;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(53, 67, 45, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--gray-color);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-color);
+            font-size: 18px;
+        }
+
+        .menu-category {
+            margin-bottom: 30px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+        }
+
+        .menu-item h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .menu-item .price {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .menu-item .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray-color);
+        }
+
+        .menu-item .rating i {
+            color: #FFD700;
+        }
+
+        /* Detail Page Styles */
+        .detail-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background-color);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        .detail-page.active {
+            transform: translateX(0);
+        }
+
+        .detail-header {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1;
+        }
+
+        .detail-back-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .detail-back-btn:hover {
+            background: var(--light-gray);
+        }
+
+        .detail-title {
+            font-size: 20px;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .detail-items {
+            padding: 16px;
+        }
+
+        .detail-item {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .detail-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .detail-item-content {
+            padding: 16px;
+        }
+
+        .detail-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .detail-item-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .detail-item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .detail-item-description {
+            color: var(--gray-color);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .detail-item-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-color);
+            font-size: 14px;
+        }
+
+        .rating-stars {
+            color: #FFD700;
+        }
+
+        .rating-count {
+            color: var(--gray-color);
+        }
+
+        /* Animation for detail page */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="home.html" class="back-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+            Menu
+        </a>
+    </header>
+
+    <div class="menu-grid">
+        <div class="menu-card" onclick="showCategory('Starters')">
+            <img src="https://images.unsplash.com/photo-1541014741259-de529411b96a?w=500" alt="Starters" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Starters</div>
+            </div>
+        </div>
+        <div class="menu-card" onclick="showCategory('Salads')">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" alt="Salads" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Salads</div>
+            </div>
+        </div>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500" alt="Indian Appetizers" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Indian Appetizers</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=500" alt="Mutton" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Mutton</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=500" alt="Seafood" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Seafood</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1552611052-33e04de081de?w=500" alt="Noodles" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Noodles</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=500" alt="Sizzlers" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Sizzlers</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" alt="Pizza" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Pizza</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500" alt="Pasta" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Pasta</div>
+            </div>
+        </a>
+        <div class="menu-card" onclick="showCategory('Main Course')">
+            <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500" alt="Main Course" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Main Course</div>
+            </div>
+        </div>
+        <div class="menu-card" onclick="showCategory('Rice/Biryani')">
+            <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500" alt="Rice/Biryani" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Rice/Biryani</div>
+            </div>
+        </div>
+        <div class="menu-card" onclick="showCategory('Kebabs')">
+            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500" alt="Kebabs" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Kebabs</div>
+            </div>
+        </div>
+        <div class="menu-card" onclick="showCategory('Seafood Kebabs')">
+            <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500" alt="Seafood Kebabs" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Seafood Kebabs</div>
+            </div>
+        </div>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500" alt="Breads" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Breads</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=500" alt="Lentils/Dals" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Lentils/Dals</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1533640924469-f04e06f8898d?w=500" alt="Accompaniments" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Accompaniments</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500" alt="Mocktails" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Mocktails</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500" alt="Desserts" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Desserts</div>
+            </div>
+        </a>
+        <a href="#" class="menu-card">
+            <img src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500" alt="Milkshakes" class="menu-image">
+            <div class="menu-overlay">
+                <div class="menu-title">Milkshakes</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title"></h2>
+                <button class="close-modal" aria-label="Close modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-grid" id="modalGrid"></div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="item-details-modal" id="itemDetailsModal">
+        <div class="modal-header">
+            <button class="back-button" onclick="closeItemModal()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <div class="item-image-container">
+                <img class="main-item-image" src="" alt="">
+            </div>
+            <div class="item-info">
+                <div class="item-header">
+                    <h2 class="item-name"></h2>
+                    <div class="item-meta">
+                        <span class="item-price"></span>
+                        <span class="item-type"></span>
+                    </div>
+                </div>
+                <p class="item-description"></p>
+            </div>
+            
+            <div class="similar-food-section">
+                <h3>Similar Food</h3>
+                <div class="similar-items-grid">
+                    <!-- Similar items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Pages for each subcategory -->
+    <div class="detail-page" id="starters-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('starters-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Starters</h2>
+        </div>
+        <div class="detail-items" id="starters-items"></div>
+    </div>
+
+    <div class="detail-page" id="salads-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('salads-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Salads</h2>
+        </div>
+        <div class="detail-items" id="salads-items"></div>
+    </div>
+
+    <div class="detail-page" id="indian-appetizers-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('indian-appetizers-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Indian Appetizers</h2>
+        </div>
+        <div class="detail-items" id="indian-appetizers-items"></div>
+    </div>
+
+    <div class="detail-page" id="mutton-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('mutton-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Mutton</h2>
+        </div>
+        <div class="detail-items" id="mutton-items"></div>
+    </div>
+
+    <div class="detail-page" id="seafood-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('seafood-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Seafood</h2>
+        </div>
+        <div class="detail-items" id="seafood-items"></div>
+    </div>
+
+    <div class="detail-page" id="noodles-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('noodles-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Noodles</h2>
+        </div>
+        <div class="detail-items" id="noodles-items"></div>
+    </div>
+
+    <div class="detail-page" id="sizzlers-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('sizzlers-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Sizzlers</h2>
+        </div>
+        <div class="detail-items" id="sizzlers-items"></div>
+    </div>
+
+    <div class="detail-page" id="pizza-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('pizza-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Pizza</h2>
+        </div>
+        <div class="detail-items" id="pizza-items"></div>
+    </div>
+
+    <div class="detail-page" id="pasta-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('pasta-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Pasta</h2>
+        </div>
+        <div class="detail-items" id="pasta-items"></div>
+    </div>
+
+    <div class="detail-page" id="breads-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('breads-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Breads</h2>
+        </div>
+        <div class="detail-items" id="breads-items"></div>
+    </div>
+
+    <div class="detail-page" id="lentils-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('lentils-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Lentils/Dals</h2>
+        </div>
+        <div class="detail-items" id="lentils-items"></div>
+    </div>
+
+    <div class="detail-page" id="accompaniments-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('accompaniments-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Accompaniments</h2>
+        </div>
+        <div class="detail-items" id="accompaniments-items"></div>
+    </div>
+
+    <div class="detail-page" id="mocktails-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('mocktails-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Mocktails</h2>
+        </div>
+        <div class="detail-items" id="mocktails-items"></div>
+    </div>
+
+    <div class="detail-page" id="desserts-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('desserts-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Desserts</h2>
+        </div>
+        <div class="detail-items" id="desserts-items"></div>
+    </div>
+
+    <div class="detail-page" id="milkshakes-detail">
+        <div class="detail-header">
+            <button class="detail-back-btn" onclick="closeDetailPage('milkshakes-detail')">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="detail-title">Milkshakes</h2>
+        </div>
+        <div class="detail-items" id="milkshakes-items"></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span>Home</span>
+        </a>
+        <a href="menu.html" class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"/>
+            </svg>
+            <span>Menu</span>
+        </a>
+    </nav>
+
+    <script src="menu-items.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalOverlay = document.getElementById('categoryModal');
+            const modal = modalOverlay.querySelector('.modal');
+            const modalTitle = modal.querySelector('.modal-title');
+            const modalGrid = document.getElementById('modalGrid');
+            const closeModal = modal.querySelector('.close-modal');
+            const menuCards = document.querySelectorAll('.menu-card');
+            let lastOpenCategory = null;
+            let lastOpenSubcategory = null;
+
+            // Function to show subcategories
+            function showSubcategories(category, subcategories) {
+                modalTitle.textContent = category;
+                modalGrid.innerHTML = Object.entries(subcategories).map(([name, items]) => 
+                    createSubcategorySection(name, items)
+                ).join('');
+
+                // Add click listeners to subcategory headers
+                modalGrid.querySelectorAll('.subcategory-header').forEach(header => {
+                    const subcategory = header.dataset.subcategory;
+                    const itemsList = document.getElementById(`${subcategory.toLowerCase().replace(/\s+/g, '-')}-items`);
+                    
+                    header.addEventListener('click', () => {
+                        // If this header was previously open, keep it open
+                        if (lastOpenSubcategory === subcategory) {
+                            header.classList.add('active');
+                            itemsList.classList.add('show');
+                        }
+                        
+                        // Toggle current section
+                        if (!header.classList.contains('active')) {
+                            // Close all other sections
+                            modalGrid.querySelectorAll('.subcategory-header').forEach(h => {
+                                h.classList.remove('active');
+                                const list = document.getElementById(`${h.dataset.subcategory.toLowerCase().replace(/\s+/g, '-')}-items`);
+                                if (list) list.classList.remove('show');
+                            });
+                            
+                            // Open this section
+                            header.classList.add('active');
+                            itemsList.classList.add('show');
+                            lastOpenSubcategory = subcategory;
+                        } else {
+                            // Close this section
+                            header.classList.remove('active');
+                            itemsList.classList.remove('show');
+                            lastOpenSubcategory = null;
+                        }
+                    });
+
+                    // If this was the last open subcategory, open it
+                    if (lastOpenSubcategory === subcategory) {
+                        header.classList.add('active');
+                        itemsList.classList.add('show');
+                    }
+                });
+
+                // Add click listeners to menu items
+                modalGrid.querySelectorAll('.menu-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const itemName = item.dataset.itemName;
+                        showItemDetails(itemName);
+                    });
+                });
+
+                modalOverlay.classList.add('show');
+                setTimeout(() => modal.classList.add('active'), 10);
+                document.body.classList.add('modal-open');
+            }
+
+            // Function to get Unsplash image URL
+            function getUnsplashImage(itemName, category) {
+                const searchTerms = {
+                    'Noodles': ['noodles', 'chinese-noodles', 'asian-noodles'],
+                    'Pizza': ['pizza', 'italian-pizza'],
+                    'Pasta': ['pasta', 'italian-pasta'],
+                    'Sizzlers': ['sizzler', 'steak-sizzler'],
+                    'Seafood': ['seafood', 'fish-dish'],
+                    'Mutton': ['mutton-curry', 'lamb-dish'],
+                    'Breads': ['indian-bread', 'naan'],
+                    'Lentils/Dals': ['dal', 'indian-lentils'],
+                    'Accompaniments': ['indian-sides', 'raita'],
+                    'Mocktails': ['mocktail', 'drink'],
+                    'Desserts': ['dessert', 'indian-dessert'],
+                    'Milkshakes': ['milkshake', 'shake'],
+                    'Soups': ['soup', 'chinese-soup'],
+                    'Starters': ['appetizer', 'starter'],
+                    'Salads': ['salad', 'fresh-salad'],
+                    'Papad & Khakra': ['papad', 'indian-papad', 'masala-papad']
+                };
+
+                // Get search terms for the category
+                const terms = searchTerms[category] || [category.toLowerCase()];
+                
+                // Pick a random search term from the available ones
+                let searchTerm = terms[Math.floor(Math.random() * terms.length)];
+                
+                // Add specific item keywords if available
+                if (itemName.toLowerCase().includes('cheese')) {
+                    searchTerm = 'cheese-papad';
+                } else if (itemName.toLowerCase().includes('masala')) {
+                    searchTerm = 'masala-papad';
+                } else if (itemName.toLowerCase().includes('roll')) {
+                    searchTerm = 'papad-roll';
+                }
+
+                return `https://source.unsplash.com/featured/?${encodeURIComponent(searchTerm)}&${Math.random()}`;
+            }
+
+            // Function to get item details
+            function getItemDetails(itemName) {
+                // First try to find in current category
+                const currentCategory = modalTitle.textContent;
+                const items = getMenuItems(currentCategory);
+                
+                if (items) {
+                    if (items.type === 'subcategories') {
+                        // Search in all subcategories
+                        for (const [subcategory, subcategoryItems] of Object.entries(items.data)) {
+                            const item = subcategoryItems.find(i => i.name === itemName);
+                            if (item) {
+                                return {
+                                    ...item,
+                                    subcategory,
+                                    category: currentCategory
+                                };
+                            }
+                        }
+                    } else if (Array.isArray(items.data)) {
+                        // Search in direct items
+                        const item = items.data.find(i => i.name === itemName);
+                        if (item) {
+                            return {
+                                ...item,
+                                    category: currentCategory
+                            };
+                        }
+                    }
+                }
+                
+                // If not found, return a default item
+                return {
+                    name: itemName,
+                    price: '₹0',
+                    description: 'Item description not available',
+                    image: getUnsplashImage(itemName, currentCategory || 'food'),
+                    rating: 4.5
+                };
+            }
+
+            // Function to show item details
+            window.showItemDetails = function(itemName) {
+                const item = getItemDetails(itemName);
+                if (!item) {
+                    console.log('No item found:', itemName);
+                    return;
+                }
+
+                // Store the current state
+                lastOpenCategory = modalTitle.textContent;
+                const activeHeader = modalGrid.querySelector('.subcategory-header.active');
+                if (activeHeader) {
+                    lastOpenSubcategory = activeHeader.dataset.subcategory;
+                }
+
+                // Close the category modal
+                modal.classList.remove('active');
+                modalOverlay.classList.remove('show');
+
+                // Show item details modal
+                const backdrop = document.getElementById('modalBackdrop');
+                const itemModal = document.getElementById('itemDetailsModal');
+                
+                // Update modal content
+                itemModal.querySelector('.item-name').textContent = item.name;
+                itemModal.querySelector('.main-item-image').src = item.image || 'https://via.placeholder.com/500';
+                itemModal.querySelector('.item-price').textContent = item.price;
+                itemModal.querySelector('.item-type').textContent = item.type || '';
+                itemModal.querySelector('.item-description').textContent = item.description || '';
+
+                // Update similar items
+                const similarItems = getSimilarItems(item);
+                const similarItemsGrid = itemModal.querySelector('.similar-items-grid');
+                similarItemsGrid.innerHTML = similarItems.map(similarItem => `
+                    <div class="similar-item">
+                        <img src="${similarItem.image || 'https://via.placeholder.com/500'}" alt="${similarItem.name}">
+                        <div class="similar-item-info">
+                            <div class="similar-item-name">${similarItem.name}</div>
+                            <div class="similar-item-meta">
+                                <div class="similar-item-price">${similarItem.price}</div>
+                                <div class="similar-item-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${similarItem.rating || '4.5'}</span>
+                                </div>
+                            </div>
+                            <button class="similar-item-view-details" onclick="showItemDetails('${similarItem.name}')">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Show the modals
+                backdrop.classList.add('show');
+                itemModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            };
+
+            // Function to get similar items
+            function getSimilarItems(item) {
+                const currentCategory = item.category;
+                const items = getMenuItems(currentCategory);
+                let allItems = [];
+
+                if (items) {
+                    if (items.type === 'subcategories') {
+                        // Get items from all subcategories
+                        Object.values(items.data).forEach(subcategoryItems => {
+                            allItems = allItems.concat(subcategoryItems.map(i => ({
+                                ...i
+                            })));
+                        });
+                    } else if (Array.isArray(items.data)) {
+                        allItems = items.data.map(i => ({
+                            ...i
+                        }));
+                    }
+                }
+
+                // Filter out current item and get up to 4 similar items
+                return allItems
+                    .filter(i => i.name !== item.name)
+                    .slice(0, 4);
+            }
+
+            // Function to create subcategory section
+            function createSubcategorySection(name, items) {
+                return `
+                    <div class="subcategory-section">
+                        <div class="subcategory-header" data-subcategory="${name}">
+                            <div class="subcategory-title">
+                                <div class="subcategory-title-text">
+                                    ${name}
+                                    <div class="subcategory-line"></div>
+                                </div>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 9l6 6 6-6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="menu-items-list" id="${name.toLowerCase().replace(/\s+/g, '-')}-items">
+                            ${Array.isArray(items) ? items.map(item => `
+                                <div class="menu-item" data-item-name="${item.name}">
+                                    <span class="menu-item-name">${item.name}</span>
+                                    <span class="menu-item-arrow">›</span>
+                                </div>
+                            `).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Function to close item details modal and return to category view
+            window.closeItemModal = function() {
+                const itemModal = document.getElementById('itemDetailsModal');
+                const backdrop = document.getElementById('modalBackdrop');
+                backdrop.classList.remove('show');
+                itemModal.classList.remove('show');
+                document.body.style.overflow = '';
+                
+                // If we have a stored category, reopen the category modal
+                if (lastOpenCategory) {
+                    showCategory(lastOpenCategory);
+                }
+            };
+
+            // Function to show category
+            window.showCategory = function(category) {
+                const items = getMenuItems(category);
+                if (items) {
+                    if (items.type === 'subcategories' || category === 'Noodles' || category === 'Pizza' || 
+                        category === 'Pasta' || category === 'Sizzlers' || category === 'Seafood' || 
+                        category === 'Mutton' || category === 'Breads' || category === 'Lentils/Dals' || 
+                        category === 'Accompaniments' || category === 'Mocktails' || 
+                        category === 'Desserts' || category === 'Milkshakes') {
+                        
+                        // Create subcategories structure if not exists
+                        const subcategories = items.type === 'subcategories' ? items.data : {
+                            [category]: items.data || []
+                        };
+                        
+                        showSubcategories(category, subcategories);
+                        modalOverlay.classList.add('show');
+                        setTimeout(() => modal.classList.add('active'), 10);
+                        document.body.classList.add('modal-open');
+                    }
+                }
+            };
+
+            // Function to close category modal
+            function closeModalHandler() {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    modalOverlay.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                }, 300);
+            }
+
+            // Add click handlers for menu cards
+            menuCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.querySelector('.menu-title').textContent;
+                    showCategory(category);
+                });
+            });
+
+            // Add click handlers for modal close
+            closeModal.addEventListener('click', closeModalHandler);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModalHandler();
+                }
+            });
+
+            // Add keyboard handler for escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (modalOverlay.classList.contains('show')) {
+                        closeModalHandler();
+                    } else if (document.getElementById('itemDetailsModal').style.display === 'block') {
+                        closeItemModal();
+                    }
+                }
+            });
+
+            // Add touch handlers for modal
+            let touchStartY = 0;
+            let touchEndY = 0;
+
+            modal.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            });
+
+            modal.addEventListener('touchmove', (e) => {
+                touchEndY = e.touches[0].clientY;
+                const diff = touchEndY - touchStartY;
+                
+                if (diff > 0 && modal.scrollTop === 0) {
+                    e.preventDefault();
+                    modal.style.transform = `translateY(${diff}px)`;
+                }
+            });
+
+            modal.addEventListener('touchend', () => {
+                const diff = touchEndY - touchStartY;
+                if (diff > 100 && modal.scrollTop === 0) {
+                    closeModalHandler();
+                } else {
+                    modal.style.transform = '';
+                }
+            });
+
+            // Add theme toggle functionality
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+
+            // Listen for theme changes
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'theme') {
+                    document.documentElement.setAttribute('data-theme', e.newValue || 'light');
+                }
+            });
+        });
+
+        // Function to show detail page
+        function showDetailPage(category) {
+            const detailPage = document.getElementById(`${category.toLowerCase().replace(/\s+/g, '-')}-detail`);
+            if (detailPage) {
+                detailPage.classList.add('active');
+                populateDetailPage(category);
+            }
+        }
+
+        // Function to populate detail page with items
+        function populateDetailPage(category) {
+            const container = document.getElementById(`${category.toLowerCase().replace(/\s+/g, '-')}-items`);
+            if (!container) return;
+
+            const items = getMenuItems(category);
+            if (!items || !items.data) return;
+
+            container.innerHTML = items.data.map(item => `
+                <div class="detail-item">
+                    <img src="${item.image || 'https://via.placeholder.com/500'}" alt="${item.name}" class="detail-item-image">
+                    <div class="detail-item-content">
+                        <div class="detail-item-header">
+                            <h3 class="detail-item-name">${item.name}</h3>
+                            <span class="detail-item-price">${item.price}</span>
+                        </div>
+                        <p class="detail-item-description">${item.description || ''}</p>
+                        <div class="detail-item-rating">
+                            <div class="rating-stars">
+                                ${'★'.repeat(Math.floor(item.rating || 4.5))}${(item.rating || 4.5) % 1 ? '½' : ''}${'☆'.repeat(5 - Math.ceil(item.rating || 4.5))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Function to close detail page
+        window.closeDetailPage = function(detailPageId) {
+            const detailPage = document.getElementById(detailPageId);
+            if (detailPage) {
+                detailPage.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>

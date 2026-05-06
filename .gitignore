@@ -25,6 +25,5 @@ dist-ssr
 
 # AURA Specific
 .planning/
-v2/
-v1/
 .env.local
+.env

@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# AURA - The Next-Gen Restaurant Ecosystem
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AURA is a premium, real-time restaurant management and ordering ecosystem designed to elevate the dining experience. Built as a high-fidelity digital menu and order management system, it combines a sleek **glassmorphism** aesthetic with a robust **React + Supabase** backend.
 
-Currently, two official plugins are available:
+> [!IMPORTANT]
+> This is a professional freelancing project developed specifically for **AURA Restaurant**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🌟 Key Features
 
-## React Compiler
+- **Dynamic Digital Menu:** 80+ curated items with real-time availability sync.
+- **Real-Time Ordering:** Seamless customer-to-kitchen order transmission via Supabase.
+- **Glassmorphism UI:** A premium, modern interface with smooth blurs, translucency, and responsive layouts.
+- **Manager Dashboard:** Real-time operational monitoring for order fulfillment and status tracking.
+- **Instant Search & Filter:** High-performance client-side filtering for a smooth user experience.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Technology Stack
 
-## Expanding the ESLint configuration
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React 19, TypeScript, Vite |
+| **Backend/BaaS** | Supabase (PostgreSQL, Real-time Channels) |
+| **Styling** | Vanilla CSS (CSS Variables, Glassmorphism, Responsive Design) |
+| **Icons & Type** | Font Awesome, Google Fonts (League Spartan, Philosopher) |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📂 Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- `src/`: Modern React application source code, components, and services.
+- `v2/`: Legacy static HTML/JS version preserved for migration reference.
+- `public/`: Static assets, branding icons, and public resources.
+- `.planning/`: GSD workflow tracking, technical specs, and codebase intelligence.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Prerequisites
+- Node.js (v20+)
+- npm or yarn
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/pushkar156/4ura.git
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up environment variables:
+   Create a `.env` file in the root directory based on `.env.example`:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📜 License
+*This project is a private freelancing initiative. All rights reserved. No part of this software may be used, copied, or distributed without explicit permission.*
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Refer to the [LICENSE](LICENSE) file for the full proprietary terms.
+
+---
+*Developed by Pushkar*

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .menu-item { border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Menu Debug Test</h1>
+    <div id="debug-info" class="debug-info">Loading...</div>
+    <div id="menu-items"></div>
+
+    <script src="menu-items.js"></script>
+    <script>
+        const debugInfo = document.getElementById('debug-info');
+        const menuItemsContainer = document.getElementById('menu-items');
+
+        // Check if menu-items.js loaded
+        if (typeof menuItemsData !== 'undefined') {
+            const itemCount = Object.keys(menuItemsData).length;
+            debugInfo.innerHTML = `
+                ✅ <strong>menuItemsData loaded successfully!</strong><br>
+                📊 Total items: ${itemCount}<br>
+                🔍 Sample items: ${Object.keys(menuItemsData).slice(0, 3).join(', ')}
+            `;
+
+            // Display first 5 items
+            const items = Object.values(menuItemsData).slice(0, 5);
+            menuItemsContainer.innerHTML = '<h2>Sample Menu Items:</h2>' + 
+                items.map(item => `
+                    <div class="menu-item">
+                        <h3>${item.name}</h3>
+                        <p><strong>Price:</strong> ${item.price}</p>
+                        <p><strong>Category:</strong> ${item.category}</p>
+                        <p><strong>Type:</strong> ${item.type || 'N/A'}</p>
+                        <p><strong>Description:</strong> ${item.description}</p>
+                    </div>
+                `).join('');
+        } else {
+            debugInfo.innerHTML = `
+                ❌ <strong>menuItemsData NOT loaded!</strong><br>
+                🔍 Check if menu-items.js file exists and is accessible<br>
+                📁 File path: menu-items.js
+            `;
+        }
+    </script>
+</body>
+</html>

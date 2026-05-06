@@ -1,0 +1,66 @@
+<div class="section-title">
+    What's New?
+    <div class="dropdown">
+        <button class="view-all dropdown-toggle">Starters</button>
+        <div class="dropdown-menu">
+            <a href="#" class="dropdown-item" data-category="starters">Starters</a>
+            <a href="#" class="dropdown-item" data-category="main-course">Main Course</a>
+            <a href="#" class="dropdown-item" data-category="bar">Bar</a>
+        </div>
+    </div>
+</div> 
+
+/* Add these styles to your existing CSS */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--card-bg);
+    min-width: 160px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 10px 16px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--light-gray);
+    color: var(--primary-color);
+}
+
+.dropdown-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.dropdown-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+[data-theme="dark"] .dropdown-menu {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+} 
